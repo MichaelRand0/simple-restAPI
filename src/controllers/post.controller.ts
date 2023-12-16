@@ -1,7 +1,8 @@
-import db from '../db.js'
+import { Request, Response } from 'express'
+import db from '../db'
 
 class PostController {
-  async createPost(req, res) {
+  async createPost(req:Request, res:Response) {
     const { title, content, user_id } = req.body
     await db
       .query(
@@ -21,7 +22,7 @@ class PostController {
       })
   }
 
-  async getPostsByUser(req, res) {
+  async getPostsByUser(req:Request, res:Response) {
     const id = req.query.id
     const bdRes = await db.query('SELECT * FROM post WHERE user_id = ($1)', [
       id,

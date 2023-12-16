@@ -1,9 +1,9 @@
 import express from 'express'
-import userController from '../controllers/user.controller.js'
+import userController from '../controllers/user.controller'
 
 const {Router} = express
 
-const router = new Router()
+const router = Router()
 
 router.post('/user', userController.createUser)
 router.get('/user', userController.getUsers)

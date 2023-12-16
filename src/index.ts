@@ -1,7 +1,7 @@
 import express from 'express'
 import pkg from 'pg'
-import userRouter from './routes/user.route.js'
-import postRouter from './routes/post.route.js'
+import userRouter from './routes/user.route'
+import postRouter from './routes/post.route'
 
 const { Client } = pkg
 
@@ -21,7 +21,7 @@ app.use(express.json())
 
 const client = new Client(config)
 
-await client.connect()
+client.connect()
 
 app.listen(PORT, () => console.log(`App working on PORT: ${PORT}`))
 
