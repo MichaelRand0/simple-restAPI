@@ -1,29 +1,37 @@
 import express from 'express'
-import pkg from 'pg'
-import userRouter from './routes/user.route'
-import postRouter from './routes/post.route'
+import { connectDB, db } from './db'
+import Person from './model/Person'
+import syncAllModels from './helpers/syncAllModels'
 
-const { Client } = pkg
+// const { Client } = pkg
 
-const config = {
-  user: 'postgres',
-  host: 'localhost',
-  database: 'home_db',
-  password: 'rand',
-  port: 8080,
-}
+// const config = {
+//   user: 'postgres',
+//   host: 'localhost',
+//   database: 'home_db',
+//   password: 'rand',
+//   port: 8080,
+// }
 
 const PORT = 8000
 
 const app = express()
 
-app.use(express.json())
+app.listen(PORT, async () => {
+  console.log('🚀Server started Successfully')
+  await connectDB()
+  await syncAllModels().then((res) => {
+    console.log('✅Synced database successfully...')
+  })
+})
 
-const client = new Client(config)
+// app.use(express.json())
 
-client.connect()
+// const client = new Client(config)
 
-app.listen(PORT, () => console.log(`App working on PORT: ${PORT}`))
+// client.connect()
 
-app.use('/api', userRouter)
-app.use('/api', postRouter)
+// app.listen(PORT, () => console.log(`App working on PORT: ${PORT}`))
+
+// app.use('/api', userRouter)
+// app.use('/api', postRouter)

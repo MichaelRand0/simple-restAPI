@@ -1,13 +1,18 @@
-import pkg from 'pg'
+import { Sequelize, DataTypes } from 'sequelize'
 
-const { Pool } = pkg
-
-const db = new Pool({
-  user: 'postgres',
+const db = new Sequelize('home_db', 'postgres', 'rand', {
   host: 'localhost',
-  database: 'home_db',
-  password: 'rand',
-  port: 8080,
+  dialect: 'postgres',
+  port: 8080
 })
 
-export default db
+async function connectDB() {
+  try {
+    await db.authenticate()
+    console.log('✅ Connection has been established successfully.')
+  } catch (error) {
+    console.error('Unable to connect to the database:', error)
+  }
+}
+
+export { connectDB, db, Sequelize, DataTypes }
