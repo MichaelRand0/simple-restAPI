@@ -5,10 +5,10 @@ const {Router} = express
 
 const router = Router()
 
-router.post('/user', userController.createUser)
-router.get('/user', userController.getUsers)
-router.get('/user/:id', userController.getOneUser)
-router.put('/user', userController.updateUser)
-router.delete('/user/:id', userController.deleteUser)
+router.post('/user', userController.create)
+router.get('/user', userController.getAll)
+router.get('/user/:id', userController.getOne)
+router.put('/user', userController.update)
+router.delete('/user/:id', userController.delete)
 
 export default router
