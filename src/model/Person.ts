@@ -1,8 +1,9 @@
 import { DataTypes, Model } from 'sequelize'
 import {db} from '../db'
 import Post from './Post'
+import IPerson from '../types/Person'
 
-class Person extends Model {}
+class Person extends Model<IPerson> {}
 
 Person.init(
   {
@@ -21,12 +22,14 @@ Person.init(
   },
   {
     sequelize: db,
-    modelName: 'Person',
-    tableName: 'Person',
+    modelName: 'person',
+    tableName: 'person',
     timestamps: false,
   }
 )
 
-Person.hasOne(Post)
+Person.hasOne(Post, {
+  foreignKey: 'person_id'
+})
 
 export default Person

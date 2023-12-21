@@ -1,43 +1,34 @@
 import { Request, Response } from 'express'
-import db from '../db'
+import Person from '../model/Person'
 
 class UserController {
   async createUser(req: Request, res: Response) {
-    const { first_name, last_name } = req.body
-    const dbRes = await db.query(
-      'INSERT INTO person (first_name, last_name) values ($1, $2) RETURNING *',
-      [first_name, last_name]
-    )
-    res.status(200).json(dbRes?.rows[0])
+    const {age, first_name, last_name} = req.body
+    const newUser = await Person.create({age, first_name, last_name})
+    res.status(200).json(newUser)
   }
 
   async getUsers(req: Request, res: Response) {
-    const dbRes = await db.query('SELECT * FROM person')
-    res.status(200).json(dbRes?.rows)
+    const allUsers = await Person.findAll()
+    res.status(200).json(allUsers)
   }
 
   async getOneUser(req: Request, res: Response) {
-    const id = req?.params?.id
-    const dbRes = await db.query('SELECT * FROM person where id = $1', [id])
-    res.status(200).json(dbRes?.rows[0])
+    const {id} = req.params
+    const user = await Person.findByPk(id)
+    res.status(200).json(user)
   }
 
   async updateUser(req: Request, res: Response) {
-    const { first_name, last_name, id } = req.body
-    const dbRes = await db.query(
-      `UPDATE person set first_name = $1, last_name = $2 where id = $3 RETURNING *`,
-      [first_name, last_name, id]
-    )
-    res.status(200).json(dbRes?.rows[0])
+    const newUser = req.body
+    const updatedUser = await Person.update(newUser, {where: {id: newUser.id}, returning: true})
+    res.status(200).json(updatedUser[1][0])
   }
 
   async deleteUser(req: Request, res: Response) {
-    const id = req?.params?.id
-    const dbRes = await db.query(
-      `DELETE FROM person where id = $1 RETURNING *`,
-      [id]
-    )
-    res.status(200).json(dbRes?.rows[0])
+    const {id} = req.params
+    await Person.destroy({where: {id}})
+    res.status(200).json({message: `User with id=${id} deleted`, id})
   }
 }
 

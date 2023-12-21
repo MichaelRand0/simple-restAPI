@@ -7,6 +7,6 @@ const {Router} = express
 const router = Router()
 
 router.post('/post', postController.createPost)
-router.get('/post', postController.getPostsByUser)
+router.get('/post', postController.getPosts)
 
 export default router

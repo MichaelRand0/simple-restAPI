@@ -1,33 +1,17 @@
 import { Request, Response } from 'express'
-import db from '../db'
+import Post from '../model/Post'
 
 class PostController {
-  async createPost(req:Request, res:Response) {
-    const { title, content, user_id } = req.body
-    await db
-      .query(
-        'INSERT INTO post (title, content, user_id) values ($1, $2, $3) RETURNING *',
-        [title, content, user_id]
-      )
-      .catch((err) => {
-        if(err.code === '23503') {
-            res.status(400).json({
-                status: 400,
-                message: `Пользователя с id ${user_id} не существует`
-            })
-        }
-      })
-      .then((queryRes) => {
-        res.status(200).json(queryRes?.rows?.[0])
-      })
+  async createPost(req: Request, res: Response) {
+    const { title, content, person_id } = req.body
+    const newPost = await Post.create({ title, content, person_id })
+    res.status(200).json(newPost)
   }
 
-  async getPostsByUser(req:Request, res:Response) {
-    const id = req.query.id
-    const bdRes = await db.query('SELECT * FROM post WHERE user_id = ($1)', [
-      id,
-    ])
-    res.status(200).json(bdRes.rows[0])
+  async getPosts(req: Request, res: Response) {
+    const {id} = req.body
+    const posts = await Post.findAll(id ? {where: {person_id: id}} : undefined)
+    res.status(200).json(posts)
   }
 }
 

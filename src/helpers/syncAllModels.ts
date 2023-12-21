@@ -3,7 +3,7 @@ import Post from "../model/Post"
 
 const syncAllModels = async () => {
     const options = {
-        force: true
+        force: false
     }
     await Person.sync(options)
     await Post.sync(options)
