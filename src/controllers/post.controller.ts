@@ -13,7 +13,7 @@ class PostController {
     const posts = await Post.findAll(
       id ? { where: { person_id: id } } : undefined
     )
-    res.status(200).json(posts)
+    res.status(200).json(posts.filter(post => post.dataValues.person_id))
   }
 
   async getOne(req: Request, res: Response) {
