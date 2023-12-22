@@ -69,7 +69,7 @@ class UserController {
         }
       }
     )
-    res.status(200).json(updatedUser[1][0])
+    res.status(200).json(updatedUser[1][0] ? updatedUser[1][0] : 'user doesnt exists')
   }
 
   async delete(req: Request, res: Response) {
