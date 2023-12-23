@@ -1,5 +1,5 @@
-import Person from "../model/Person"
-import Post from "../model/Post"
+import Person from "../models/Person"
+import Post from "../models/Post"
 
 const syncAllModels = async () => {
     const options = {

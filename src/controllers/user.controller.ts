@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import Person from '../model/Person'
+import Person from '../models/Person'
 import { ValidationError } from 'sequelize'
 
 class UserController {
@@ -11,7 +11,7 @@ class UserController {
         const type = e?.errors?.[0]?.type
         switch (type) {
           case 'notnull violation':
-            res.status(401).json(message)
+            res.status(400).json(message)
             break
 
           default:
@@ -38,7 +38,7 @@ class UserController {
       const type = e?.errors?.[0]?.type
       switch (type) {
         case 'notnull violation':
-          res.status(401).json(message)
+          res.status(400).json(message)
           break
 
         default:
@@ -60,7 +60,7 @@ class UserController {
         const type = e?.errors?.[0]?.type
         switch (type) {
           case 'notnull violation':
-            res.status(401).json(message)
+            res.status(400).json(message)
             break
 
           default:
@@ -80,7 +80,7 @@ class UserController {
         const type = e?.errors?.[0]?.type
         switch (type) {
           case 'notnull violation':
-            res.status(401).json(message)
+            res.status(400).json(message)
             break
 
           default:

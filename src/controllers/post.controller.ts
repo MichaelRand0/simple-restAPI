@@ -1,26 +1,28 @@
 import { Request, Response } from 'express'
-import Post from '../model/Post'
+import Post from '../models/Post'
 import { Error, ValidationError } from 'sequelize'
+import fileService from '../services/file.service'
 
 class PostController {
-  async create(req: Request, res: Response) {
+  async create(req: any, res: Response) {
     const { title, content, person_id } = req.body
-    const newPost = await Post.create({ title, content, person_id }).catch(
-      (e: ValidationError) => {
-        const message = e?.errors?.[0]?.message
-        const type = e?.errors?.[0]?.type
-        switch (type) {
-          case 'notnull violation':
-            res.status(401).json(message)
-            break
+    try {
+      const filename:string = fileService.saveFile(req.files.img)
+      const newPost = await Post.create({ title, content, person_id, img: filename ? filename : null })
+      return res.status(200).json(newPost)
+    } catch (e: any) {
+      const type = e.name
+      const message = e.message
+      switch (type) {
+        case 'SequelizeForeignKeyConstraintError' || 'SequelizeValidationError':
+          res.status(400).json(message)
+          break
 
-          default:
-            res.status(500).json(message)
-            break
-        }
+        default:
+          res.status(500).json(message)
+          break
       }
-    )
-    res.status(200).json(newPost)
+    }
   }
 
   async getAll(req: Request, res: Response) {
@@ -43,7 +45,7 @@ class PostController {
       const type = e?.errors?.[0]?.type
       switch (type) {
         case 'notnull violation':
-          res.status(401).json(message)
+          res.status(400).json(message)
           break
 
         default:
@@ -67,7 +69,7 @@ class PostController {
       const message = e.message
       switch (type) {
         case 'SequelizeForeignKeyConstraintError':
-          res.status(401).json(message)
+          res.status(400).json(message)
           break
 
         default:
@@ -85,7 +87,7 @@ class PostController {
         const type = e?.errors?.[0]?.type
         switch (type) {
           case 'notnull violation':
-            res.status(401).json(message)
+            res.status(400).json(message)
             break
 
           default:
