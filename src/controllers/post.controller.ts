@@ -2,16 +2,20 @@ import { Request, Response } from 'express'
 import Post from '../models/Post'
 import { Error, ValidationError } from 'sequelize'
 import fileService from '../services/file.service'
+import PostService from '../services/post.service'
 
 class PostController {
   async create(req: any, res: Response) {
     const { title, content, person_id } = req.body
     try {
-      const filename:string = fileService.saveFile(req.files.img)
-      const newPost = await Post.create({ title, content, person_id, img: filename ? filename : null })
+      // const filename = fileService.checkFileFormat(req.files.img)
+      // const newPost = await Post.create({ title, content, person_id, img: filename ? filename : null })
+      // const saveMessage = fileService.saveFile(req.files.img)
+      const newPost = await PostService.create(req.body, req.files.img)
       return res.status(200).json(newPost)
     } catch (e: any) {
       const type = e.name
+      console.log('type', e)
       const message = e.message
       switch (type) {
         case 'SequelizeForeignKeyConstraintError' || 'SequelizeValidationError':
