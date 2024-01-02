@@ -3,6 +3,7 @@ import * as uuid from 'uuid'
 import * as path from 'path'
 import * as fs from 'fs'
 import { UploadedFile } from 'express-fileupload'
+import AppError from '../helpers/errorHandler/AppError'
 
 class FileService {
   getFileName(file: UploadedFile) {
@@ -20,15 +21,16 @@ class FileService {
     if (availableFormats[format]) {
       return file.name
     } else {
-      throw new Error(`Img format is prohibited`)
+      throw new AppError('format error', `Img format ${format} is prohibited`, 400)
     }
   }
 
   checkFileSize(file: UploadedFile) {
     const allowedSize = 2000000
     if (file.size > allowedSize) {
-      throw new Error(
-        'The image size is too large'
+      throw new AppError('size error',
+        'The image size is too large',
+        400
       )
     }
     return file

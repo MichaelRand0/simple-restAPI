@@ -2,6 +2,7 @@ import { UploadedFile } from 'express-fileupload'
 import Post from '../models/Post'
 import IPost from '../types/Post'
 import fileService from './file.service'
+import AppError from '../helpers/errorHandler/AppError'
 
 class PostService {
   async create(data: IPost, img: UploadedFile) {
@@ -10,8 +11,9 @@ class PostService {
       const fileName = fileService.validateFile(img)
       const newPost = await Post.create({ title, content, person_id, img: fileName ? fileName : null })
       return newPost
-    } catch (e:any) {
-      throw new Error(e?.message)
+    } catch (e: any) {
+      const {handleError} = AppError
+      handleError(e)
     }
   }
   async update(data: IPost) {
