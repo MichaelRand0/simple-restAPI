@@ -39,7 +39,7 @@ class PersonService {
   async delete(id: string) {
     try {
       const deletedUser = await Person.destroy({ where: { id } })
-      console.log('deletedUser', deletedUser)
+      // console.log('deletedUser', deletedUser)
       return deletedUser ? `User with id ${id} deleted` : `User with id ${id} doesnt exists`
     } catch (e: any) {
       const { handleError } = AppError

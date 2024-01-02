@@ -29,7 +29,7 @@ class AppError extends Error {
     }
     const status =
       e?.code ?? e?.httpCode ?? e?.original?.code ?? e?.errors[0]?.type
-    console.log('error', e)
+    // console.log('error', e)
     resError = errors[status] ?? resError
     throw new AppError(resError.name, resError.message, resError.code)
   }
