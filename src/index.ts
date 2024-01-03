@@ -5,8 +5,11 @@ import postRouter from './routes/post.route'
 import userRouter from './routes/user.route'
 import fileUpload from 'express-fileupload'
 import AppError from './helpers/errorHandler/AppError'
+import dotenv from 'dotenv'
 
-const PORT = 8000
+dotenv.config()
+
+const PORT = process.env.SERVER_PORT ?? 8000
 
 const app = express()
 

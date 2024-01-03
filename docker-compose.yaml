@@ -1,0 +1,27 @@
+version: "3.0"
+services:
+  app:
+    container_name: "main"
+    links:
+      - postgres
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+    - "8000:8000"
+    command: yarn dev
+    depends_on:
+      - postgres
+    restart: always
+
+  postgres:
+    image: postgres:latest
+    container_name: "postgres"
+    env_file:
+      - .env
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: always

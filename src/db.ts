@@ -1,17 +1,20 @@
 import { Sequelize, DataTypes } from 'sequelize'
+import dotenv from 'dotenv'
 
-const db = new Sequelize('home_db', 'postgres', 'rand', {
-  host: 'localhost',
+dotenv.config()
+
+const db = new Sequelize(process.env.POSTGRES_DB ?? 'home_db', process.env.POSTGRES_USER ?? 'postgres', process.env.POSTGRES_PASSWORD ?? 'rand', {
+  host: process.env.POSTGRES_HOST ?? 'postgres',
   dialect: 'postgres',
-  port: 8080
+  port: Number(process.env.DB_PORT ?? 5432)
 })
 
 async function connectDB() {
   try {
     await db.authenticate()
     console.log('✅ Connection to DB has been established successfully.')
-  } catch (error) {
-    console.error('Unable to connect to the database:', error)
+  } catch (error:any) {
+    console.error('Unable to connect to the database:', error?.message)
   }
 }
 
