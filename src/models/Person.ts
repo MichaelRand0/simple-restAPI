@@ -7,17 +7,36 @@ class Person extends Model<IPerson> {}
 
 Person.init(
   {
-    first_name: {
+    login: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+      validate: {
+        is: /^[a-z-A-Z-0-9]+$/,
+        min: 6,
+        max: 100
+      }
+    },
+    password: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        is: /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%@&? "]).*$/,
+        min: 6,
+        max: 200
+      }
+    },
+    first_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     last_name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     age: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {

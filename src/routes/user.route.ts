@@ -5,7 +5,7 @@ const {Router} = express
 
 const router = Router()
 
-router.post('/user', userController.create)
+// router.post('/user', userController.create)
 router.get('/user', userController.getAll)
 router.get('/user/:id', userController.getOne)
 router.put('/user', userController.update)

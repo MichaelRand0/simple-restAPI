@@ -4,9 +4,9 @@ import IPerson from '../types/Person'
 
 class PersonService {
   async create(data: IPerson) {
-    const { first_name, last_name, age } = data
+    const { first_name, last_name, age, login, password } = data
     try {
-      const newUser = await Person.create({ first_name, last_name, age })
+      const newUser = await Person.create({ login, first_name, last_name, age, password })
       return newUser
     } catch (e: any) {
       const { handleError } = AppError

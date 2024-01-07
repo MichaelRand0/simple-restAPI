@@ -1,6 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import Post from '../models/Post'
-import { ValidationError } from 'sequelize'
 import PostService from '../services/post.service'
 import postService from '../services/post.service'
 

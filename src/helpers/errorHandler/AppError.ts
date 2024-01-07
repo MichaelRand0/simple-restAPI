@@ -16,12 +16,23 @@ class AppError extends Error {
         message: e?.message,
         code: 400,
       },
+      '23505': {
+        name: 'Unique value error',
+        message: e?.message,
+        code: 400,
+      },
       'notNull Violation': {
         name: 'notNull Violation',
         message: e?.message,
         code: 400,
       },
+      'Validation error': {
+        name: 'Validation error',
+        message: e?.message,
+        code: 400,
+      },
     }
+    // console.log('error:', e)
     let resError = {
       name: e?.name ?? 'Server error',
       message: e?.message ?? 'Some error occured on server, please try again',

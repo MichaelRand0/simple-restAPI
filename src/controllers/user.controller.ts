@@ -4,9 +4,9 @@ import personService from '../services/person.service'
 
 class UserController {
   async create(req: Request, res: Response, next: NextFunction) {
-    const { age, first_name, last_name } = req.body
+    const { age, first_name, last_name, login, password } = req.body
     try {
-      const newUser = await personService.create({ age, first_name, last_name })
+      const newUser = await personService.create({ login, age, first_name, last_name, password })
       return res.status(200).json(newUser)
     } catch (e: any) {
       next(e)
