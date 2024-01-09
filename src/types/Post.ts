@@ -1,7 +1,7 @@
 interface IPost {
     title: string
     content: string
-    person_id: number
+    user_id: number
     img: string | null
     id?: number
 }

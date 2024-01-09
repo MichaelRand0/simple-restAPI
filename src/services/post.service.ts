@@ -6,19 +6,18 @@ import AppError from '../helpers/errorHandler/AppError'
 
 class PostService {
   async create(data: IPost, img: UploadedFile) {
-    const { title, content, person_id } = data
+    const { title, content, user_id } = data
     try {
       const fileName = fileService.validateFile(img)
       const newPost = await Post.create({
         title,
         content,
-        person_id,
+        user_id,
         img: fileName ? fileName : null,
       })
       return newPost
     } catch (e: any) {
-      const { handleError } = AppError
-      handleError(e)
+      throw new AppError(e?.name, e?.message, e?.code)
     }
   }
   async update(data: IPost) {
@@ -29,19 +28,17 @@ class PostService {
       })
       return updatedPost[1][0] ? updatedPost[1][0] : 'Post doesnt exists'
     } catch (e: any) {
-      const { handleError } = AppError
-      handleError(e)
+      throw new AppError(e?.name, e?.message, e?.code)
     }
   }
   async getAll(id?: string) {
     try {
       const posts = await Post.findAll(
-        id ? { where: { person_id: id } } : undefined
+        id ? { where: { user_id: id } } : undefined
       )
       return posts
-    } catch (e) {
-      const { handleError } = AppError
-      handleError(e)
+    } catch (e: any) {
+      throw new AppError(e?.name, e?.message, e?.code)
     }
   }
 
@@ -52,8 +49,7 @@ class PostService {
         ? `Post with id ${id} deleted`
         : `Post with id ${id} doesnt exists`
     } catch (e: any) {
-      const { handleError } = AppError
-      handleError(e)
+      throw new AppError(e?.name, e?.message, e?.code)
     }
   }
 
@@ -62,8 +58,7 @@ class PostService {
       const post = await Post.findByPk(id)
       return post ? post : 'Post doesnt exists'
     } catch (e: any) {
-      const { handleError } = AppError
-      handleError(e)
+      throw new AppError(e?.name, e?.message, e?.code)
     }
   }
 }

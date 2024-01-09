@@ -7,6 +7,7 @@ import authRouter from './routes/auth.route'
 import fileUpload from 'express-fileupload'
 import AppError from './helpers/errorHandler/AppError'
 import dotenv from 'dotenv'
+import ErrorHandler from './helpers/errorHandler/errorHandler'
 
 dotenv.config()
 
@@ -30,8 +31,10 @@ app.use('/api', userRouter)
 app.use('/api', postRouter)
 app.use('/api', authRouter)
 
+app.use(ErrorHandler)
+
 app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
   // console.log('ERROR:', err)
-  res.status(err.httpCode).json({ ...err, message: err.message })
+  res.status(err.code).json({ ...err, message: err.message })
   next()
 })

@@ -1,29 +1,25 @@
 import { DataTypes, Model } from 'sequelize'
 import {db} from '../db'
 import Post from './Post'
-import IPerson from '../types/Person'
+import IUser from '../types/User'
 
-class Person extends Model<IPerson> {}
+class User extends Model<IUser> {}
 
-Person.init(
+User.init(
   {
     login: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       validate: {
-        is: /^[a-z-A-Z-0-9]+$/,
-        min: 6,
-        max: 100
+        is: /^[a-zA-Z0-9]+$/
       }
     },
     password: {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        is: /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%@&? "]).*$/,
-        min: 6,
-        max: 200
+        is: /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%@&? "]).*$/
       }
     },
     first_name: {
@@ -41,14 +37,14 @@ Person.init(
   },
   {
     sequelize: db,
-    modelName: 'person',
-    tableName: 'person',
+    modelName: 'User',
+    tableName: 'User',
     timestamps: false,
   }
 )
 
-Person.hasOne(Post, {
-  foreignKey: 'person_id'
+User.hasOne(Post, {
+  foreignKey: 'user_id'
 })
 
-export default Person
+export default User
