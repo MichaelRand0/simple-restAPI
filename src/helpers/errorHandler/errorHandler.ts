@@ -1,7 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import isErrorByRegexp from '../isErrorByRegexp'
-import errorsList from './errorsList'
-import getErrorCode from './getAppError'
 import getAppError from './getAppError'
 
 const ErrorHandler = (
@@ -10,7 +7,6 @@ const ErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log('Error Handler:', e)
   const status = e.code ?? e.httpCode ?? e.status ?? 500
   const message: string =
     e?.errors?.[0]?.message ??

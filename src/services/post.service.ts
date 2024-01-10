@@ -8,7 +8,7 @@ class PostService {
   async create(data: IPost, img: UploadedFile) {
     const { title, content, user_id } = data
     try {
-      const fileName = fileService.validateFile(img)
+      const fileName = fileService.saveFile(img)
       const newPost = await Post.create({
         title,
         content,

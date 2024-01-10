@@ -21,17 +21,18 @@ class FileService {
     if (availableFormats[format]) {
       return file.name
     } else {
-      throw new AppError('format error', `Img format ${format} is prohibited`, 400)
+      throw new AppError(
+        'format error',
+        `Img format ${format} is prohibited`,
+        400
+      )
     }
   }
 
   checkFileSize(file: UploadedFile) {
     const allowedSize = 2000000
     if (file.size > allowedSize) {
-      throw new AppError('size error',
-        'The image size is too large',
-        400
-      )
+      throw new AppError('size error', 'The image size is too large', 400)
     }
     return file
   }
@@ -47,18 +48,16 @@ class FileService {
       const fileName = this.validateFile(file)
       if (fileName) {
         const folderName = path.resolve('static')
+        const newFileName = this.getFileName(file)
         if (!fs.existsSync(folderName)) {
           fs.mkdirSync(folderName)
         }
-        const filePath = path.resolve('static', fileName)
+        const filePath = path.resolve('static', newFileName)
         file.mv(filePath)
-        return `File ${fileName} successfully saved`
-      } else {
-        return fileName
+        return newFileName
       }
     } catch (e: any) {
-      console.error('save file error:', e)
-      return e?.message
+      throw new AppError(e?.name, e?.message, e?.code)
     }
   }
 }

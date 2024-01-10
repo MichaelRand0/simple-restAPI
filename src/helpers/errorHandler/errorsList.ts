@@ -5,32 +5,38 @@ const errorsList = {
   'Validation error': {
     status: 400,
   },
-  'JsonWebTokenError': {
+  JsonWebTokenError: {
     status: 401,
   },
-  'InvalidValueInteger': {
+  InvalidValueInteger: {
     status: 400,
     name: 'Invalid integer',
     message: 'Value must be an integer',
-    regexp: /invalid input syntax for type integer: "([^"]+)"/
+    regexp: /invalid input syntax for type integer: "([^"]+)"/,
   },
-  'undefinedValueError': {
+  undefinedValueError: {
     status: 400,
     name: 'Undefined value error',
     message: 'Passed value is undefined',
-    regexp: /WHERE parameter "([^"]+)" has invalid "undefined" value/
+    regexp: /WHERE parameter "([^"]+)" has invalid "undefined" value/,
   },
-  'nullValueError': {
+  nullValueError: {
     status: 400,
     name: 'Null value error',
     message: 'Passed value is null',
-    regexp: /notNull Violation: ([^"]+) cannot be null/
+    regexp: /notNull Violation: ([^"]+) cannot be null/,
   },
-  'SequelizeForeignKeyConstraintError': {
+  SequelizeForeignKeyConstraintError: {
     status: 400,
     name: 'Foreign key error',
-    message: 'Invalid foreign key'
-  }
+    message: 'Invalid foreign key',
+  },
+  undefinedPropertyError: {
+    status: 400,
+    name: 'Cannot read properties of null',
+    message: 'Cannot read properties of null',
+    regexp: /Cannot read properties of null \(reading '[\w\s]+'+\)/,
+  },
 }
 
 export default errorsList
