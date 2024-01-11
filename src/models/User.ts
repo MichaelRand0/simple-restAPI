@@ -1,3 +1,4 @@
+import { Roles } from './../types/User';
 import { DataTypes, Model } from 'sequelize'
 import {db} from '../db'
 import Post from './Post'
@@ -33,6 +34,10 @@ User.init(
     age: {
       type: DataTypes.INTEGER,
       allowNull: true,
+    },
+    roles: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false,
     },
   },
   {

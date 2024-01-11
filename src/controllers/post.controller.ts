@@ -1,11 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import PostService from '../services/post.service'
 import postService from '../services/post.service'
+import decodeToken from '../helpers/decodeToken'
 
 class PostController {
-  async create(req: any, res: Response, next: NextFunction) {
+  async create(req: Request, res: Response, next: NextFunction) {
+    const token = req?.headers?.authorization?.split(' ')?.[1] ?? ''
+    const decoded = decodeToken(token)
     try {
-      const newPost = await PostService.create(req.body, req.files.img)
+      const newPost = await PostService.create(
+        { ...req.body, user_id: decoded?.id },
+        req?.files?.img
+      )
       return res.status(200).json(newPost)
     } catch (e: any) {
       next(e)
@@ -44,8 +50,11 @@ class PostController {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params
+    const { id: userId } = decodeToken(
+      req?.headers?.authorization?.split(' ')?.[1] ?? ''
+    )
     try {
-      const deletedPost = await PostService.delete(id)
+      const deletedPost = await PostService.delete(id, userId)
       return res.status(200).json(deletedPost)
     } catch (e) {
       next(e)

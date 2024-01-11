@@ -8,6 +8,11 @@ const errorsList = {
   JsonWebTokenError: {
     status: 401,
   },
+  'noPermissionsError': {
+    status: 403,
+    name: 'Permissions error',
+    message: 'You dont have permissions to make this request'
+  },
   InvalidValueInteger: {
     status: 400,
     name: 'Invalid integer',

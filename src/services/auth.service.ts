@@ -26,11 +26,11 @@ class AuthService {
     } else if (!isPasswordMatch) {
       throw new AppError('Auth error', 'Incorrect login or password', 400)
     }
-    const token = createToken({ id: user.dataValues.id })
+    const token = createToken({ id: user.dataValues.id, roles: user.dataValues.roles })
     return token
   }
 
-  async register(user: IUser) {
+  async register(user: Omit<IUser, 'roles'>) {
     const { login, password, first_name, last_name, age } = user
 
     if (!login || !password) {
@@ -47,8 +47,9 @@ class AuthService {
       last_name,
       age,
       password: hashPassword,
+      roles: ['USER'],
     })
-    const token = createToken({ id: newUser?.dataValues.id })
+    const token = createToken({ id: newUser?.dataValues.id, roles: newUser?.dataValues.roles })
     return token
   }
 }

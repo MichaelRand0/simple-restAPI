@@ -1,11 +1,11 @@
-import { UploadedFile } from 'express-fileupload'
 import Post from '../models/Post'
 import IPost from '../types/Post'
 import fileService from './file.service'
 import AppError from '../helpers/errorHandler/AppError'
+import userService from './user.service'
 
 class PostService {
-  async create(data: IPost, img: UploadedFile) {
+  async create(data: IPost, img: any) {
     const { title, content, user_id } = data
     try {
       const fileName = fileService.saveFile(img)
@@ -42,8 +42,23 @@ class PostService {
     }
   }
 
-  async delete(id: string) {
+  async delete(id: string, userId: string) {
     try {
+      const user = await userService.getOne(userId)
+      let isMatch = true
+      if (!user?.dataValues.roles.includes('ADMIN')) {
+        const post = await this.getOne(id)
+        isMatch =
+          typeof post !== 'string' ? post.dataValues.user_id === userId : true
+      }
+      console.log('isMatch', isMatch)
+      if (!isMatch) {
+        throw new AppError(
+          'deletePostError',
+          'You dont have permissions to delete this post',
+          403
+        )
+      }
       const deletedPost = await Post.destroy({ where: { id } })
       return deletedPost
         ? `Post with id ${id} deleted`

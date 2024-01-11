@@ -1,18 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import User from '../models/User'
 import UserService from '../services/user.service'
+import decodeToken from '../helpers/decodeToken'
 
 class UserController {
-  async create(req: Request, res: Response, next: NextFunction) {
-    const { age, first_name, last_name, login, password } = req.body
-    try {
-      const newUser = await UserService.create({ login, age, first_name, last_name, password })
-      return res.status(200).json(newUser)
-    } catch (e: any) {
-      next(e)
-    }
-  }
-
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const allUsers = await User.findAll()
@@ -43,9 +34,20 @@ class UserController {
   }
 
   async delete(req: Request, res: Response, next: NextFunction) {
+    const token = req?.headers?.authorization?.split(' ')?.[1] ?? ''
+    const decodedToken = decodeToken(token)
+    try {
+      const deletedUser = await UserService.delete(decodedToken?.id)
+      return res.status(200).json(deletedUser)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async deleteByPk(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params
     try {
-      const deletedUser = await UserService.delete(id)
+      const deletedUser = await UserService.deleteByPk(id)
       return res.status(200).json(deletedUser)
     } catch (e) {
       next(e)

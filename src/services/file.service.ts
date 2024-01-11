@@ -43,19 +43,22 @@ class FileService {
     return filename
   }
 
-  saveFile(file: UploadedFile) {
+  saveFile(file?: UploadedFile) {
     try {
-      const fileName = this.validateFile(file)
-      if (fileName) {
-        const folderName = path.resolve('static')
-        const newFileName = this.getFileName(file)
-        if (!fs.existsSync(folderName)) {
-          fs.mkdirSync(folderName)
+      if (file) {
+        const fileName = this.validateFile(file)
+        if (fileName) {
+          const folderName = path.resolve('static')
+          const newFileName = this.getFileName(file)
+          if (!fs.existsSync(folderName)) {
+            fs.mkdirSync(folderName)
+          }
+          const filePath = path.resolve('static', newFileName)
+          file.mv(filePath)
+          return newFileName
         }
-        const filePath = path.resolve('static', newFileName)
-        file.mv(filePath)
-        return newFileName
       }
+      return null
     } catch (e: any) {
       throw new AppError(e?.name, e?.message, e?.code)
     }
