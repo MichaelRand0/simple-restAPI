@@ -5,7 +5,7 @@ import IUser from '../types/User'
 class UserService {
   async getOne(id: string) {
     try {
-      const newUser = await User.findByPk(id)
+      const newUser = await User.findByPk(id, {attributes: {exclude: ['refresh_token', 'password']}})
       return newUser
     } catch (e: any) {
       throw new AppError(e?.name, e?.message, e?.code)
@@ -16,7 +16,7 @@ class UserService {
     try {
       const updatedUser = await User.update(data, {
         where: { id: data.id },
-        returning: true,
+        returning: ['first_name', 'last_name', 'age', 'id', 'login', 'roles'],
       })
       return updatedUser[1][0] ?? null
     } catch (e: any) {

@@ -6,7 +6,7 @@ import decodeToken from '../helpers/decodeToken'
 class UserController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const allUsers = await User.findAll()
+      const allUsers = await User.findAll({attributes: {exclude: ['refresh_token', 'password']}})
       return res.status(200).json(allUsers)
     } catch (e) {
       next(e)

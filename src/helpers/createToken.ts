@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
-const createToken = (payload: any) => {
-  return jwt.sign(payload, process?.env?.SECRET_KEY ?? 'q02021905', {expiresIn: '2h'})
+const createToken = (payload: any, key: string, options: jwt.SignOptions) => {
+  return jwt.sign(payload, key, options)
 }
 
 export default createToken

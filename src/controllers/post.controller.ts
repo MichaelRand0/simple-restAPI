@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import PostService from '../services/post.service'
 import postService from '../services/post.service'
 import decodeToken from '../helpers/decodeToken'
+import AppError from '../helpers/errorHandler/AppError'
 
 class PostController {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -40,8 +41,16 @@ class PostController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     const newPost = req.body
+    const token = req?.headers?.authorization?.split(' ')?.[1] ?? ''
+    const user = decodeToken(token)
     try {
-      const updatedPost = await PostService.update(newPost)
+      if(user?.id !== newPost?.user_id) {
+        throw new AppError('updatePostPermissions', 'You dont have permissions to update this post', 403)
+      }
+      const updatedPost = await PostService.update({
+        ...newPost,
+        user_id: user?.id,
+      })
       return res.status(200).json(updatedPost)
     } catch (e: any) {
       next(e)

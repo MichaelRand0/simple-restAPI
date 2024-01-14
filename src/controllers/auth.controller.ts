@@ -21,6 +21,15 @@ class AuthController {
       next(e)
     }
   }
+
+  async refresh(req: Request, res: Response, next: NextFunction) {
+    try {
+      const refreshResp = await authService.refresh(req.body?.token)
+      return res.status(200).json(refreshResp)
+    } catch (e: any) {
+      next(e)
+    }
+  }
 }
 
 export default new AuthController()
