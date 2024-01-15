@@ -8,6 +8,16 @@ const errorsList = {
   JsonWebTokenError: {
     status: 401,
   },
+  'TokenExpiredError': {
+    status: 403,
+    name: 'Token expired error',
+    message: 'jwt expired'
+  },
+  'SequelizeUniqueConstraintError': {
+    status: 400,
+    name: 'unique violation',
+    message: 'Unique value error'
+  },
   'noPermissionsError': {
     status: 403,
     name: 'Permissions error',

@@ -3,7 +3,7 @@ import AppError from '../helpers/errorHandler/AppError'
 import validatePassword from '../helpers/validatePassword'
 import User from '../models/User'
 import { LoginData } from '../types/Auth'
-import IUser from '../types/User'
+import IUser, { Role, Roles } from '../types/User'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import userService from './user.service'
@@ -33,7 +33,7 @@ class AuthService {
         roles: user.dataValues.roles,
       },
       process?.env?.SECRET_KEY ?? '',
-      { expiresIn: '1min' }
+      { expiresIn: '1h' }
     )
     const refreshToken = createToken(
       {
@@ -52,7 +52,7 @@ class AuthService {
     }
   }
 
-  async register(user: Omit<IUser, 'roles'>) {
+  async register(user: Omit<IUser, 'roles'>, roles: Roles[Role]) {
     const { login, password, first_name, last_name, age } = user
 
     if (!login || !password) {
@@ -69,7 +69,7 @@ class AuthService {
       last_name,
       age,
       password: hashPassword,
-      roles: ['USER'],
+      roles,
       refresh_token: '',
     })
     const token = createToken(
@@ -78,7 +78,7 @@ class AuthService {
         roles: newUser?.dataValues.roles,
       },
       process?.env?.SECRET_KEY ?? '',
-      { expiresIn: '1min' }
+      { expiresIn: '1h' }
     )
     const refreshToken = createToken(
       {
@@ -95,6 +95,14 @@ class AuthService {
       token,
       refreshToken,
     }
+  }
+
+  async createUser(user: Omit<IUser, 'roles'>) {
+    return await this.register(user, ['USER'])
+  }
+
+  async createAdmin(user: Omit<IUser, 'roles'>) {
+    return await this.register(user, ['USER', 'ADMIN'])
   }
 
   async refresh(refreshToken: string) {
@@ -122,7 +130,7 @@ class AuthService {
         const newAccessToken = createToken(
           { id: user.dataValues?.id, roles: user.dataValues?.roles },
           process?.env?.SECRET_KEY ?? '',
-          { expiresIn: '1min' }
+          { expiresIn: '1h' }
         )
         const newRefreshToken = createToken(
           { id: user.dataValues?.id },

@@ -14,7 +14,17 @@ class AuthController {
 
   async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const regResp = await authService.register(req.body)
+      const regResp = await authService.createUser(req.body)
+      return res.status(200).json(regResp)
+    } catch (e: any) {
+      // console.log('ewer', e)
+      next(e)
+    }
+  }
+
+  async registerAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const regResp = await authService.createAdmin(req.body)
       return res.status(200).json(regResp)
     } catch (e: any) {
       // console.log('ewer', e)

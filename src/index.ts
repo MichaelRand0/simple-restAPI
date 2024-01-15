@@ -34,7 +34,7 @@ app.use('/api', authRouter)
 app.use(ErrorHandler)
 
 app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
-  // console.log('ERROR:', err)
+  console.log('ERROR:', err)
   res.status(err.code).json({ ...err, message: err.message })
   next()
 })

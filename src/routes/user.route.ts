@@ -10,6 +10,7 @@ const router = Router()
 router.get('/user', userController.getAll)
 router.get('/user/:id', userController.getOne)
 router.put('/user', authMiddleware.validate('USER'), userController.update)
+router.put('/user/:id', authMiddleware.validate('ADMIN'), userController.updateByPk)
 router.delete('/user', authMiddleware.validate('USER'), userController.delete)
 router.delete('/user/:id', authMiddleware.validate('ADMIN'), userController.deleteByPk)
 
