@@ -3,7 +3,7 @@ interface IPerson {
     login: string
     password: string
     refresh_token: string
-    roles: Roles[Role]
+    role: Role
     first_name?: string
     last_name?: string
     age?: number

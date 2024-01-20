@@ -35,8 +35,8 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    roles: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+    role: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     refresh_token: {

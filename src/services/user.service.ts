@@ -2,6 +2,7 @@ import { Role, Roles } from './../types/User'
 import AppError from '../helpers/errorHandler/AppError'
 import User from '../models/User'
 import IUser from '../types/User'
+import roles from '../helpers/roles'
 
 class UserService {
   async getOne(id: string) {
@@ -15,13 +16,13 @@ class UserService {
     }
   }
 
-  async update(data: IUser) {
+  async update(data: IUser, id: number) {
     try {
       const updatedUser = await User.update(
-        { ...data, roles: undefined },
+        { ...data, role: undefined, id },
         {
-          where: { id: data.id },
-          returning: ['first_name', 'last_name', 'age', 'id', 'login', 'roles'],
+          where: { id },
+          returning: ['first_name', 'last_name', 'age', 'id', 'login', 'role'],
         }
       )
       return updatedUser[1][0] ?? null
@@ -31,12 +32,16 @@ class UserService {
   }
 
   async updateByPk(data: IUser, id: number) {
+    const keys = Object.keys(roles)
+    if(data.role && !keys.includes(data.role)) {
+      throw new AppError('RoleTypeError', 'Incorrect Role value', 400)
+    }
     try {
       const updatedUser = await User.update(
-        { ...data, roles: undefined, id },
+        { ...data, id },
         {
           where: { id },
-          returning: ['first_name', 'last_name', 'age', 'id', 'login', 'roles'],
+          returning: ['first_name', 'last_name', 'age', 'id', 'login', 'role'],
         }
       )
       return updatedUser[1][0] ?? null

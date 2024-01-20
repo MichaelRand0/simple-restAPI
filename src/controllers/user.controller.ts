@@ -24,9 +24,11 @@ class UserController {
   }
 
   async update(req: Request, res: Response, next: NextFunction) {
+    const token = req?.headers?.authorization?.split(' ')?.[1] ?? ''
+    const decodedToken = decodeToken(token)
     const newUser = req.body
     try {
-      const updatedUser = await UserService.update(newUser)
+      const updatedUser = await UserService.update(newUser, decodedToken?.id)
       return res.status(200).json(updatedUser)
     } catch (e) {
       next(e)

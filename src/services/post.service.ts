@@ -46,10 +46,9 @@ class PostService {
     try {
       const user = await userService.getOne(userId)
       let isMatch = true
-      if (!user?.dataValues.roles.includes('ADMIN')) {
+      if (user?.dataValues.role !== 'ADMIN') {
         const post = await this.getOne(id)
-        isMatch =
-          typeof post !== 'string' ? post.dataValues.user_id === userId : true
+        isMatch = post ? post.dataValues.user_id === userId : true
       }
       console.log('isMatch', isMatch)
       if (!isMatch) {
@@ -71,7 +70,7 @@ class PostService {
   async getOne(id: string) {
     try {
       const post = await Post.findByPk(id)
-      return post ? post : 'Post doesnt exists'
+      return post ? post : null
     } catch (e: any) {
       throw new AppError(e?.name, e?.message, e?.code)
     }

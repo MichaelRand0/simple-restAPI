@@ -43,13 +43,14 @@ class PostController {
     const newPost = req.body
     const token = req?.headers?.authorization?.split(' ')?.[1] ?? ''
     const user = decodeToken(token)
+    const postData = await PostService.getOne(newPost.id)
     try {
-      if(user?.id !== newPost?.user_id) {
+      if(user.role !== 'ADMIN' && user?.id !== postData?.dataValues?.user_id) {
         throw new AppError('updatePostPermissions', 'You dont have permissions to update this post', 403)
       }
       const updatedPost = await PostService.update({
         ...newPost,
-        user_id: user?.id,
+        user_id: postData?.dataValues?.user_id,
       })
       return res.status(200).json(updatedPost)
     } catch (e: any) {

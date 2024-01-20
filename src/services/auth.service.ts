@@ -30,7 +30,7 @@ class AuthService {
     const token = createToken(
       {
         id: user.dataValues.id,
-        roles: user.dataValues.roles,
+        role: user.dataValues.role,
       },
       process?.env?.SECRET_KEY ?? '',
       { expiresIn: '1h' }
@@ -45,14 +45,14 @@ class AuthService {
     await userService.update({
       ...user.dataValues,
       refresh_token: refreshToken,
-    })
+    }, user?.dataValues?.id ?? 0)
     return {
       token,
       refreshToken
     }
   }
 
-  async register(user: Omit<IUser, 'roles'>, roles: Roles[Role]) {
+  async register(user: Omit<IUser, 'roles'>, role: Role) {
     const { login, password, first_name, last_name, age } = user
 
     if (!login || !password) {
@@ -69,13 +69,13 @@ class AuthService {
       last_name,
       age,
       password: hashPassword,
-      roles,
+      role,
       refresh_token: '',
     })
     const token = createToken(
       {
         id: newUser?.dataValues.id,
-        roles: newUser?.dataValues.roles,
+        role: newUser?.dataValues.role,
       },
       process?.env?.SECRET_KEY ?? '',
       { expiresIn: '1h' }
@@ -90,7 +90,7 @@ class AuthService {
     await userService.update({
       ...newUser.dataValues,
       refresh_token: refreshToken,
-    })
+    }, newUser?.dataValues?.id ?? 0)
     return {
       token,
       refreshToken,
@@ -98,11 +98,11 @@ class AuthService {
   }
 
   async createUser(user: Omit<IUser, 'roles'>) {
-    return await this.register(user, ['USER'])
+    return await this.register(user, 'USER')
   }
 
   async createAdmin(user: Omit<IUser, 'roles'>) {
-    return await this.register(user, ['USER', 'ADMIN'])
+    return await this.register(user, 'ADMIN')
   }
 
   async refresh(refreshToken: string) {
@@ -128,7 +128,7 @@ class AuthService {
 
       if (user) {
         const newAccessToken = createToken(
-          { id: user.dataValues?.id, roles: user.dataValues?.roles },
+          { id: user.dataValues?.id, role: user.dataValues?.role },
           process?.env?.SECRET_KEY ?? '',
           { expiresIn: '1h' }
         )
@@ -140,7 +140,7 @@ class AuthService {
         userService.update({
           ...user.dataValues,
           refresh_token: newRefreshToken,
-        })
+        }, user?.dataValues?.id ?? 0)
         return {
           token: newAccessToken,
           refreshToken: newRefreshToken,
